@@ -1,28 +1,26 @@
 import { useState } from "react";
+import { Link, useLocation } from "react-router";
 import logo from "../assets/svg/logo.svg";
 
 const LINKS = [
-  { href: "/", label: "Inicio" },
-  { href: "/nosotros", label: "Nosotros" },
-  { href: "/servicios", label: "Servicios" },
-  { href: "/novedades", label: "Novedades" },
-  { href: "/contacto", label: "Contacto" },
+  { to: "/", label: "Inicio" },
+  { to: "/nosotros", label: "Nosotros" },
+  { to: "/servicios", label: "Servicios" },
+  { to: "/contacto", label: "Contacto" },
 ];
 
 /**
  * Header / Navbar del Club de Leones.
- * - current: ruta activa (ej. "/servicios").
+ * - React Router: Link y useLocation.
  * - Colores: navy #0e2d5e, amarillo #fdcb06.
  * - Tipografía: Bricolage Grotesque y Figtree.
  */
 const FIGTREE = "Figtree, system-ui, sans-serif";
 const BRICOLAGE = '"Bricolage Grotesque", Figtree, system-ui, sans-serif';
 
-export default function Header({ current }) {
+export default function Header() {
   const [open, setOpen] = useState(false);
-
-  const path =
-    current ?? (typeof window !== "undefined" ? window.location.pathname : "/");
+  const { pathname } = useLocation();
 
   return (
     <header
@@ -30,9 +28,10 @@ export default function Header({ current }) {
       className="sticky top-[env(safe-area-inset-top,0px)] z-20 bg-[#0e2d5e] text-[1.2rem] leading-[1.65] text-white"
     >
       <div className="mx-auto flex min-h-[84px] max-w-[1400px] items-center justify-between px-3 py-3">
-        <a
-          href="/"
+        <Link
+          to="/"
           aria-label="Club de Leones, inicio"
+          onClick={() => setOpen(false)}
           style={{ fontFamily: BRICOLAGE }}
           className="flex items-center gap-3 text-[1.5rem] font-extrabold"
         >
@@ -40,7 +39,7 @@ export default function Header({ current }) {
             <img src={logo} alt="" className="h-auto w-4/5" />
           </span>
           Club de Leones
-        </a>
+        </Link>
 
         <button
           type="button"
@@ -54,15 +53,20 @@ export default function Header({ current }) {
 
         <nav
           id="nav"
-          className={`${open ? "flex" : "hidden"} absolute left-0 right-0 top-full flex-col gap-1.5 bg-[#0e2d5e] px-3 pb-5 pt-2 md:static md:flex md:flex-row md:items-center md:bg-transparent md:p-0`}
+          className={`${
+            open ? "flex" : "hidden"
+          } absolute left-0 right-0 top-full flex-col gap-1.5 bg-[#0e2d5e] px-3 pb-5 pt-2 md:static md:flex md:flex-row md:items-center md:bg-transparent md:p-0`}
         >
-          {LINKS.map(({ href, label }) => {
-            const active = href === "/" ? path === "/" : path.startsWith(href);
+          {LINKS.map(({ to, label }) => {
+            const active =
+              to === "/"
+                ? pathname === "/"
+                : pathname === to || pathname.startsWith(`${to}/`);
 
             return (
-              <a
-                key={href}
-                href={href}
+              <Link
+                key={to}
+                to={to}
                 aria-current={active ? "page" : undefined}
                 onClick={() => setOpen(false)}
                 className={`rounded-full px-4 py-[9px] text-[1.2rem] font-semibold transition-colors ${
@@ -72,7 +76,7 @@ export default function Header({ current }) {
                 } focus-visible:outline focus-visible:outline-[3px] focus-visible:outline-offset-[3px] focus-visible:outline-[#fdcb06]`}
               >
                 {label}
-              </a>
+              </Link>
             );
           })}
         </nav>

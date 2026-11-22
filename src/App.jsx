@@ -1,8 +1,9 @@
 import { BrowserRouter, Routes, Route } from "react-router";
 
 // PAGES
-import Home from "./pages/Home";
-import Services from "./pages/Services";
+import Home from "./pages/Home.jsx";
+import Services from "./pages/Services.jsx";
+import Contacto from "./pages/Contacto.jsx";
 // ---
 
 function App() {
@@ -14,6 +15,7 @@ function App() {
 
         {/* Otras páginas */}
         <Route path="/servicios" element={<Services />} />
+        <Route path="/contacto" element={<Contacto />} />
 
         {/* Ruta no encontrada */}
         <Route path="*" element={<h1>404 - Página no encontrada</h1>} />
